@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../layout/custom_preview.xml" value="0.24635416666666668" />
+        <entry key="app/src/main/res/drawable/button_cancel.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/drawable/scan_button.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/layout/activity_camera_main.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/camera_connection_fragment.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/camera_layout.xml" value="0.21979166666666666" />
       </map>
