@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/imageViewPhoto"
+    <ImageView
+        android:id="@+id/scanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/circle_border"
+        android:layout_marginBottom="130dp"
         android:padding="15dp"
-        android:text="SCAN"
+        android:background="@drawable/circle_border"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -45,23 +45,12 @@
             />
 
         <ImageView
-            android:id="@+id/imageViewAverage"
+            android:id="@+id/imageViewCancel"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_round_button_a593e0"
-            android:padding="10dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/ic_average_fffff3" />
-
-        <ImageView
-            android:id="@+id/imageViewCancel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_cancel_fffff3"
+            android:src="@drawable/button_cancel"
             android:layout_gravity="end"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"/>
 
     </FrameLayout>

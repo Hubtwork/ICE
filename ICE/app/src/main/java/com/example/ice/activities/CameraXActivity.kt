@@ -4,16 +4,25 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
 import com.example.ice.R
 import com.example.ice.utils.DebugLogger
 import com.example.ice.utils.PermissionManager
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -24,12 +33,13 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     private lateinit var previewView: PreviewView
-    private lateinit var imageViewPhoto: ImageView
+    private lateinit var scanButton: ImageView
+
     private lateinit var frameLayoutShutter: FrameLayout
     private lateinit var frameLayoutPreview: FrameLayout
+
     private lateinit var imageViewPreview: ImageView
     private lateinit var imageViewCancel: ImageView
-    private lateinit var imageViewAverage: ImageView
 
     private var imageCapture: ImageCapture? = null
 
@@ -44,8 +54,8 @@ class CameraXActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_main)
 
-        findView()
         permissionCheck()
+        findView()
         setListener()
         setCameraAnimationListener()
 
@@ -83,16 +93,22 @@ class CameraXActivity : AppCompatActivity() {
 
     private fun findView() {
         previewView = findViewById(R.id.previewView)
-        imageViewPhoto = findViewById(R.id.imageViewPhoto)
+        scanButton = findViewById(R.id.scanButton)
+
         frameLayoutShutter = findViewById(R.id.frameLayoutShutter)
         imageViewPreview = findViewById(R.id.imageViewPreview)
         frameLayoutPreview = findViewById(R.id.frameLayoutPreview)
+
         imageViewCancel = findViewById(R.id.imageViewCancel)
-        imageViewAverage = findViewById(R.id.imageViewAverage)
     }
 
     private fun setListener() {
-        imageViewPhoto.setOnClickListener {
+        scanButton.setOnClickListener {
+            /**
+                Scan Button
+                - click : Saving Photo + Request API
+                - Trigger : FrameLayoutShutter Fragment Showing
+             */
             savePhoto()
         }
 
@@ -101,14 +117,6 @@ class CameraXActivity : AppCompatActivity() {
                 hideCaptureImage()
             }
         }
-
-        imageViewAverage.setOnClickListener {
-            hideCaptureImage()
-            var bundle = Bundle()
-            bundle.putString("imageUri", savedUri.toString())
-            ActivityUtil.startActivityWithoutFinish(this, ColorAverageActivity::class.java, bundle)
-        }
-
     }
 
 
@@ -121,7 +129,7 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     private fun openCamera() {
-        DlogUtil.d(TAG, "openCamera")
+        DebugLogger.log(TAG, "openCamera")
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -142,10 +150,10 @@ class CameraXActivity : AppCompatActivity() {
 
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
-                DlogUtil.d(TAG, "바인딩 성공")
+                DebugLogger.log(TAG, "바인딩 성공")
 
             } catch (e: Exception) {
-                DlogUtil.d(TAG, "바인딩 실패 $e")
+                DebugLogger.log(TAG, "바인딩 실패 $e")
             }
         }, ContextCompat.getMainExecutor(this))
 
@@ -166,17 +174,16 @@ class CameraXActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     savedUri = Uri.fromFile(photoFile)
-                    DlogUtil.d(TAG, "savedUri : $savedUri")
+                    DebugLogger.log(TAG, "savedUri : $savedUri")
 
                     val animation =
-                        AnimationUtils.loadAnimation(this@CameraActivity, R.anim.camera_shutter)
+                        AnimationUtils.loadAnimation(this@CameraXActivity, R.anim.camera_shutter)
                     animation.setAnimationListener(cameraAnimationListener)
                     frameLayoutShutter.animation = animation
                     frameLayoutShutter.visibility = View.VISIBLE
                     frameLayoutShutter.startAnimation(animation)
 
-
-                    DlogUtil.d(TAG, "imageCapture")
+                    DebugLogger.log(TAG, "imageCapture")
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -224,11 +231,11 @@ class CameraXActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (showCaptureImage()) {
-            DlogUtil.d(TAG, "CaptureImage true")
+            DebugLogger.log(TAG, "CaptureImage true")
             hideCaptureImage()
         } else {
             onBackPressed()
-            DlogUtil.d(TAG, "CaptureImage false")
+            DebugLogger.log(TAG, "CaptureImage false")
 
         }
     }

@@ -3,7 +3,9 @@
     package="com.example.ice">
 
     <uses-feature android:name="android.hardware.camera.any" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ICE">
         <activity
-            android:name=".FullscreenActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.ICE.Fullscreen">
+            android:name=".activities.CameraXActivity"
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
