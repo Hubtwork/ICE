@@ -1,6 +1,7 @@
 package com.example.ice.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat
 import com.example.ice.R
 import com.example.ice.utils.DebugLogger
 import com.example.ice.utils.PermissionManager
+import com.google.rpc.Code
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -227,6 +229,13 @@ class CameraXActivity : AppCompatActivity() {
         imageViewPreview.setImageURI(null)
         frameLayoutPreview.visibility = View.GONE
 
+    }
+
+    // SideEffects
+    private fun openFilterSettingIntent() {
+        // Success Code = 100
+        val intent = Intent(this, SettingActivity::class.java)
+        startActivityForResult(intent, 100)
     }
 
     override fun onBackPressed() {
