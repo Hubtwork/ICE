@@ -1,6 +1,7 @@
 package com.example.ice.activities
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -19,6 +21,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.ice.R
+import com.example.ice.models.Component
 import com.example.ice.utils.DebugLogger
 import com.example.ice.utils.PermissionManager
 import com.google.rpc.Code
@@ -34,8 +37,12 @@ class CameraXActivity : AppCompatActivity() {
         private const val TAG = "CameraActivity"
     }
 
+    private lateinit var filterSet: List<Component>
+
     private lateinit var previewView: PreviewView
     private lateinit var scanButton: ImageView
+    private lateinit var filterButton: ImageView
+    private lateinit var filterCheckButton: ImageView
 
     private lateinit var frameLayoutShutter: FrameLayout
     private lateinit var frameLayoutPreview: FrameLayout
@@ -55,6 +62,8 @@ class CameraXActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_main)
+
+        filterSet = listOf()
 
         permissionCheck()
         findView()
@@ -96,6 +105,8 @@ class CameraXActivity : AppCompatActivity() {
     private fun findView() {
         previewView = findViewById(R.id.previewView)
         scanButton = findViewById(R.id.scanButton)
+        filterButton = findViewById(R.id.filterButton)
+        filterCheckButton = findViewById(R.id.button_current_filter_check)
 
         frameLayoutShutter = findViewById(R.id.frameLayoutShutter)
         imageViewPreview = findViewById(R.id.imageViewPreview)
@@ -105,6 +116,15 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     private fun setListener() {
+
+        filterCheckButton.setOnClickListener {
+            /**
+                Check Current Filter Button
+                - click : Get Current set-Filters
+             */
+            checkCurrentFilter()
+        }
+
         scanButton.setOnClickListener {
             /**
                 Scan Button
@@ -112,6 +132,14 @@ class CameraXActivity : AppCompatActivity() {
                 - Trigger : FrameLayoutShutter Fragment Showing
              */
             savePhoto()
+        }
+
+        filterButton.setOnClickListener {
+            /**
+                Filter Button
+                - click : Open Filter Setting Intent
+             */
+            openFilterSettingIntent()
         }
 
         imageViewCancel.setOnClickListener {
@@ -232,10 +260,38 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     // SideEffects
+    private fun checkCurrentFilter() {
+        var currentFilter : String = ""
+        currentFilter = if (filterSet.isEmpty()) {
+            "Empty Filter Set"
+        } else {
+            filterSet.joinToString("\n")
+        }
+        Toast.makeText(this, currentFilter, Toast.LENGTH_LONG).show()
+    }
+
     private fun openFilterSettingIntent() {
         // Success Code = 100
         val intent = Intent(this, SettingActivity::class.java)
         startActivityForResult(intent, 100)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                100 -> {
+                    val filtersFromIntent = data!!.getStringArrayListExtra("components")
+                    if (!filtersFromIntent.isNullOrEmpty()) {
+                        var tempFilters = mutableListOf<Component>()
+                        filtersFromIntent.map {
+                            tempFilters.add( Component(it, R.drawable.chemistry, "component") )
+                        }
+                        filterSet = tempFilters
+                    }
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {
