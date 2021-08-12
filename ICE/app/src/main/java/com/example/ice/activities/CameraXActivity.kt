@@ -2,6 +2,7 @@ package com.example.ice.activities
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -23,12 +24,23 @@ import androidx.core.content.ContextCompat
 import com.example.ice.R
 import com.example.ice.adapters.QuickFilterAdapter
 import com.example.ice.fragments.QuickFilterFragment
-import com.example.ice.models.Component
 import com.example.ice.models.CustomFilter
 import com.example.ice.models.Filters
+import com.example.ice.models.ResponseData
 import com.example.ice.utils.DebugLogger
 import com.example.ice.utils.PermissionManager
-import com.google.rpc.Code
+import com.example.ice.utils.RequestToServer
+import com.example.ice.utils.RequestToServerOkHttp
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import org.json.JSONException
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -211,6 +223,37 @@ class CameraXActivity : AppCompatActivity() {
 
     }
 
+    private fun sendImage(file: File) {
+        val partBody : RequestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+        val multiPartImage = MultipartBody.Part.createFormData("image", file.name, partBody)
+        val imageRequest = RequestToServerOkHttp.service
+            imageRequest
+                .sendImage(image = multiPartImage)
+                .enqueue(
+                    object : Callback<ResponseData> {
+                        override fun onFailure(call: Call<ResponseData>, t: Throwable) {
+                            DebugLogger.log("통신실패", "$t")
+                        }
+
+                        override fun onResponse(
+                            call: Call<ResponseData>,
+                            response: Response<ResponseData>
+                        ) {
+                            DebugLogger.log("통신성공", "$file / $response")
+                            if (response.isSuccessful) {
+                                DebugLogger.log("이미지 서버연결 성공", "${response.body()!!.result}")
+                                if(response.body()!!.result.isNotEmpty())
+                                {
+                                    Toast.makeText(applicationContext, "이미지 서버 업로드 성공", Toast.LENGTH_LONG).show()
+                                }
+
+                            }
+
+                        }
+                    }
+                )
+    }
+
     private fun savePhoto() {
         imageCapture = imageCapture ?: return
 
@@ -219,6 +262,7 @@ class CameraXActivity : AppCompatActivity() {
             SimpleDateFormat("yy-mm-dd", Locale.US).format(System.currentTimeMillis()) + ".png"
         )
         val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        sendImage(photoFile)
 
         imageCapture?.takePicture(
             outputOption,

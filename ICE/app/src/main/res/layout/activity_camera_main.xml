@@ -10,11 +10,11 @@
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="300dp"/>
+        android:layout_marginBottom="150dp"/>
     
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="150dp"
 
         android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,8 +23,8 @@
 
         <ImageView
             android:id="@+id/button_current_filter_check"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/star"
 
             app:layout_constraintTop_toTopOf="parent"
@@ -34,8 +34,8 @@
 
         <ImageView
             android:id="@+id/scanButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:src="@drawable/circle_border"
 
             app:layout_constraintBottom_toBottomOf="parent"
@@ -45,8 +45,8 @@
 
         <ImageView
             android:id="@+id/filterButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/controller"
 
             app:layout_constraintTop_toTopOf="parent"
