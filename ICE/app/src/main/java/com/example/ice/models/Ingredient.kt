@@ -14,7 +14,14 @@ data class Component(
 data class CustomFilter(
     val name: String,
     val image: Int,
-    val components: ArrayList<Component>
+    var isSelected: Boolean = false,
+    var components: ArrayList<Component>
+): Serializable {
+
+}
+
+data class Filters(
+    val filters: MutableList<CustomFilter>
 ): Serializable {
 
 }

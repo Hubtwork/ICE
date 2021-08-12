@@ -8,21 +8,24 @@
         <entry key="app/src/main/res/drawable/circle_border.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/drawable/circle_fill.xml" value="0.2359375" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/drawable/ripple_border.xml" value="0.2359375" />
         <entry key="app/src/main/res/drawable/rounded_corner.xml" value="0.2359375" />
         <entry key="app/src/main/res/drawable/scan_button.xml" value="0.19166666666666668" />
-        <entry key="app/src/main/res/layout/activity_add_filter_main.xml" value="0.21979166666666666" />
+        <entry key="app/src/main/res/layout/activity_add_filter_main.xml" value="0.28283712784588444" />
         <entry key="app/src/main/res/layout/activity_camera_main.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/activity_color_average.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/activity_fullscreen.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/activity_setting_main.xml" value="0.22014422401181824" />
         <entry key="app/src/main/res/layout/activity_viewpager_content.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/activity_viewpager_slide.xml" value="0.21739130434782608" />
+        <entry key="app/src/main/res/layout/bottomsheet_quick_filter.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/camera_connection_fragment.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/camera_layout.xml" value="0.21979166666666666" />
         <entry key="app/src/main/res/layout/fragment_camera_main.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/fragment_setting_main.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/view_filter_component_item.xml" value="0.37021679921341966" />
         <entry key="app/src/main/res/layout/view_filter_item.xml" value="0.3598233995584989" />
+        <entry key="app/src/main/res/layout/view_filter_quick_item.xml" value="0.21979166666666666" />
       </map>
     </option>
   </component>

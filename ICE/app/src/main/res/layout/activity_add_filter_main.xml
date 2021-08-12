@@ -44,35 +44,72 @@
             app:layout_constraintStart_toEndOf="@+id/add_filter_main_button_cancel"
             />
         
-        <ImageView
+        <TextView
             android:id="@+id/add_filter_main_button_save"
-            android:src="@drawable/settings"
 
-            android:layout_width="25dp"
-            android:layout_height="match_parent"
+            android:background="@drawable/rounded_corner"
+            android:paddingHorizontal="10dip"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+
+            android:text="SAVE"
+            android:textSize="20sp"
+            android:textStyle="bold"
 
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-        
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mid_input_area"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingHorizontal="50dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_toolbar"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:boxStrokeColor="#ffffff"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_filter_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Filter Name"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/add_filter_list"
 
         tools:listitem="@layout/view_filter_component_item"
+        android:layout_marginTop="10dp"
 
         android:layout_width="0dp"
         android:layout_height="0dp"
 
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/mid_input_area"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/button_add_filter_component"

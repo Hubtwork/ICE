@@ -9,42 +9,52 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="300dp"/>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
 
-    <ImageView
-        android:id="@+id/button_current_filter_check"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/circle_fill"
-
-        android:layout_marginBottom="130dp"
-
+        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/scanButton" />
+        >
 
-    <ImageView
-        android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/circle_border"
-        android:layout_marginBottom="130dp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/button_current_filter_check"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/star"
 
-    <ImageView
-        android:id="@+id/filterButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/circle_border"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/scanButton" />
 
-        android:layout_marginBottom="130dp"
+        <ImageView
+            android:id="@+id/scanButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/circle_border"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/scanButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/filterButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/controller"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/scanButton"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/frameLayoutShutter"

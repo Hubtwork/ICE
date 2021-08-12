@@ -3,16 +3,16 @@ package com.example.ice.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Filter
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ice.R
 import com.example.ice.adapters.FilterListAdapter
-import com.example.ice.models.Component
 import com.example.ice.models.CustomFilter
+import com.example.ice.models.Filters
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class SettingActivity
     : AppCompatActivity()
@@ -31,9 +31,19 @@ class SettingActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting_main)
 
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_top)
+
         initRecyclerView()
         initCancelButton()
         initAddFilterButton()
+
+        loadFilters()
+    }
+
+    private fun loadFilters() {
+        val filters = intent.getSerializableExtra("filters") as Filters
+        filterListAdapter.customfilters = filters.filters
+        filterListAdapter.notifyDataSetChanged()
     }
 
     private fun initRecyclerView() {
@@ -42,27 +52,16 @@ class SettingActivity
         val gridLayoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         filterList.layoutManager = gridLayoutManager
         filterListAdapter = FilterListAdapter(this)
-        // load dummies
-        filterListAdapter.customfilters = loadDummies()
-        filterListAdapter.notifyDataSetChanged()
 
         filterList.adapter = filterListAdapter
-    }
-
-    // Dummy data for ui checking
-    private fun loadDummies(): MutableList<CustomFilter> {
-        var dummyFilterLists = mutableListOf<CustomFilter>()
-        dummyFilterLists.add(CustomFilter("Garlic-", R.drawable.garlic, arrayListOf()))
-        dummyFilterLists.add(CustomFilter("Eggs-", R.drawable.eggs, arrayListOf()))
-        return dummyFilterLists
     }
 
     private fun initCancelButton() {
         cancelButton = findViewById(R.id.setting_main_button_cancel)
         cancelButton.setOnClickListener {
             val intent = Intent()
-            var componentList = arrayListOf<String>("Ractose", "Protein")
-            intent.putExtra("components", componentList)
+            var filters = filterListAdapter.customfilters
+            intent.putExtra("filters", Filters(filters))
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
@@ -78,6 +77,7 @@ class SettingActivity
     private fun openAddFilterIntent() {
         // Success Code = 100
         val intent = Intent(this, AddFilterActivity::class.java)
+        intent.putExtra("filter", CustomFilter("", R.drawable.chemistry, false, arrayListOf()))
         startActivityForResult(intent, 100)
     }
 
@@ -86,10 +86,9 @@ class SettingActivity
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
-                    val newFilterFromIntent = data!!.getSerializableExtra("filter")
+                    val newFilterFromIntent = data!!.getSerializableExtra("filter") as CustomFilter
                     if (newFilterFromIntent != null) {
-                        val newFilter: CustomFilter = newFilterFromIntent as CustomFilter
-                        filterListAdapter.customfilters.add(newFilter)
+                        filterListAdapter.customfilters.add(newFilterFromIntent)
                         filterListAdapter.notifyDataSetChanged()
                     }
                 }

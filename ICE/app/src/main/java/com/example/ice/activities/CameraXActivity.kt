@@ -21,7 +21,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.ice.R
+import com.example.ice.adapters.QuickFilterAdapter
+import com.example.ice.fragments.QuickFilterFragment
 import com.example.ice.models.Component
+import com.example.ice.models.CustomFilter
+import com.example.ice.models.Filters
 import com.example.ice.utils.DebugLogger
 import com.example.ice.utils.PermissionManager
 import com.google.rpc.Code
@@ -37,12 +41,14 @@ class CameraXActivity : AppCompatActivity() {
         private const val TAG = "CameraActivity"
     }
 
-    private lateinit var filterSet: List<Component>
+    var filterSet = mutableListOf<CustomFilter>()
 
     private lateinit var previewView: PreviewView
     private lateinit var scanButton: ImageView
     private lateinit var filterButton: ImageView
     private lateinit var filterCheckButton: ImageView
+
+    private lateinit var quickFilter: QuickFilterFragment
 
     private lateinit var frameLayoutShutter: FrameLayout
     private lateinit var frameLayoutPreview: FrameLayout
@@ -63,7 +69,8 @@ class CameraXActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_main)
 
-        filterSet = listOf()
+        // Load Dummies
+        filterSet = loadDummies()
 
         permissionCheck()
         findView()
@@ -84,6 +91,21 @@ class CameraXActivity : AppCompatActivity() {
         } else {
             openCamera()
         }
+    }
+
+    private fun loadDummies(): MutableList<CustomFilter> {
+        var dummyFilterLists = mutableListOf<CustomFilter>()
+        dummyFilterLists.add(CustomFilter("Egg", R.drawable.fried_egg, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Milk", R.drawable.milk, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Flour", R.drawable.flour, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Beans", R.drawable.beans, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Shellfish", R.drawable.shrimp, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Fish", R.drawable.fish, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Nuts", R.drawable.walnut, false, arrayListOf()))
+        dummyFilterLists.add(CustomFilter("Pork", R.drawable.sausages, false, arrayListOf()))
+
+
+        return dummyFilterLists
     }
 
     override fun onRequestPermissionsResult(
@@ -122,7 +144,7 @@ class CameraXActivity : AppCompatActivity() {
                 Check Current Filter Button
                 - click : Get Current set-Filters
              */
-            checkCurrentFilter()
+            openQuickFilters()
         }
 
         scanButton.setOnClickListener {
@@ -260,19 +282,17 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     // SideEffects
-    private fun checkCurrentFilter() {
-        var currentFilter : String = ""
-        currentFilter = if (filterSet.isEmpty()) {
-            "Empty Filter Set"
-        } else {
-            filterSet.joinToString("\n")
-        }
-        Toast.makeText(this, currentFilter, Toast.LENGTH_LONG).show()
+    private fun openQuickFilters() {
+        val adapter = QuickFilterAdapter(this)
+        quickFilter = QuickFilterFragment(adapter)
+        adapter.setItem(filterSet)
+        quickFilter.show(supportFragmentManager, "QUICK_FILTER")
     }
 
     private fun openFilterSettingIntent() {
         // Success Code = 100
         val intent = Intent(this, SettingActivity::class.java)
+        intent.putExtra("filters", Filters(filterSet) )
         startActivityForResult(intent, 100)
     }
 
@@ -281,13 +301,9 @@ class CameraXActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 100 -> {
-                    val filtersFromIntent = data!!.getStringArrayListExtra("components")
-                    if (!filtersFromIntent.isNullOrEmpty()) {
-                        var tempFilters = mutableListOf<Component>()
-                        filtersFromIntent.map {
-                            tempFilters.add( Component(it, R.drawable.chemistry, "component") )
-                        }
-                        filterSet = tempFilters
+                    val filtersFromIntent = (data!!.getSerializableExtra("filters")) as Filters
+                    if (!filtersFromIntent.filters.isNullOrEmpty()) {
+                        filterSet = filtersFromIntent.filters
                     }
                 }
             }
