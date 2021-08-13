@@ -26,11 +26,9 @@ import com.example.ice.adapters.QuickFilterAdapter
 import com.example.ice.fragments.QuickFilterFragment
 import com.example.ice.models.CustomFilter
 import com.example.ice.models.Filters
+import com.example.ice.models.ImageResponseData
 import com.example.ice.models.ResponseData
-import com.example.ice.utils.DebugLogger
-import com.example.ice.utils.PermissionManager
-import com.example.ice.utils.RequestToServer
-import com.example.ice.utils.RequestToServerOkHttp
+import com.example.ice.utils.*
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -230,20 +228,22 @@ class CameraXActivity : AppCompatActivity() {
             imageRequest
                 .sendImage(image = multiPartImage)
                 .enqueue(
-                    object : Callback<ResponseData> {
-                        override fun onFailure(call: Call<ResponseData>, t: Throwable) {
+                    object : Callback<ImageResponseData> {
+                        override fun onFailure(call: Call<ImageResponseData>, t: Throwable) {
                             DebugLogger.log("통신실패", "$t")
                         }
 
                         override fun onResponse(
-                            call: Call<ResponseData>,
-                            response: Response<ResponseData>
+                            call: Call<ImageResponseData>,
+                            response: Response<ImageResponseData>
                         ) {
                             DebugLogger.log("통신성공", "$file / $response")
                             if (response.isSuccessful) {
-                                DebugLogger.log("이미지 서버연결 성공", "${response.body()!!.result}")
-                                if(response.body()!!.result.isNotEmpty())
+                                DebugLogger.log("이미지 서버연결 성공", "이미지 인코딩 길이 : ${response.body()!!.image.length}")
+                                if(response.body()!!.image.isNotEmpty())
                                 {
+                                    val base64Encoded = response.body()!!.image
+                                    imageViewPreview.setImageBitmap(BufferedImageReader.decodeImageToBase64(base64Encoded))
                                     Toast.makeText(applicationContext, "이미지 서버 업로드 성공", Toast.LENGTH_LONG).show()
                                 }
 
@@ -262,7 +262,6 @@ class CameraXActivity : AppCompatActivity() {
             SimpleDateFormat("yy-mm-dd", Locale.US).format(System.currentTimeMillis()) + ".png"
         )
         val outputOption = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-        sendImage(photoFile)
 
         imageCapture?.takePicture(
             outputOption,
@@ -278,6 +277,8 @@ class CameraXActivity : AppCompatActivity() {
                     frameLayoutShutter.animation = animation
                     frameLayoutShutter.visibility = View.VISIBLE
                     frameLayoutShutter.startAnimation(animation)
+
+                    sendImage(photoFile)
 
                     DebugLogger.log(TAG, "imageCapture")
                 }
