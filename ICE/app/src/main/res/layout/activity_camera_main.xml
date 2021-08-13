@@ -60,8 +60,20 @@
         android:id="@+id/frameLayoutShutter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/shutter_background"
-        android:visibility="gone" />
+        android:background="@color/white"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:id="@+id/progressBar"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pbar"
+            android:layout_gravity="center"
+            />
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/frameLayoutPreview"

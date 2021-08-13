@@ -21,6 +21,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.ice.R
 import com.example.ice.adapters.QuickFilterAdapter
 import com.example.ice.fragments.QuickFilterFragment
@@ -135,6 +136,7 @@ class CameraXActivity : AppCompatActivity() {
     }
 
     private fun findView() {
+
         previewView = findViewById(R.id.previewView)
         scanButton = findViewById(R.id.scanButton)
         filterButton = findViewById(R.id.filterButton)
@@ -145,6 +147,8 @@ class CameraXActivity : AppCompatActivity() {
         frameLayoutPreview = findViewById(R.id.frameLayoutPreview)
 
         imageViewCancel = findViewById(R.id.imageViewCancel)
+
+        Glide.with(this).load(R.drawable.pbar).into(findViewById(R.id.progressBar))
     }
 
     private fun setListener() {
@@ -242,6 +246,8 @@ class CameraXActivity : AppCompatActivity() {
                                 DebugLogger.log("이미지 서버연결 성공", "이미지 인코딩 길이 : ${response.body()!!.image.length}")
                                 if(response.body()!!.image.isNotEmpty())
                                 {
+                                    showCaptureImage()
+
                                     val base64Encoded = response.body()!!.image
                                     imageViewPreview.setImageBitmap(BufferedImageReader.decodeImageToBase64(base64Encoded))
                                     Toast.makeText(applicationContext, "이미지 서버 업로드 성공", Toast.LENGTH_LONG).show()
@@ -274,10 +280,8 @@ class CameraXActivity : AppCompatActivity() {
                     val animation =
                         AnimationUtils.loadAnimation(this@CameraXActivity, R.anim.camera_shutter)
                     animation.setAnimationListener(cameraAnimationListener)
-                    frameLayoutShutter.animation = animation
-                    frameLayoutShutter.visibility = View.VISIBLE
-                    frameLayoutShutter.startAnimation(animation)
 
+                    frameLayoutShutter.visibility = View.VISIBLE
                     sendImage(photoFile)
 
                     DebugLogger.log(TAG, "imageCapture")
@@ -298,8 +302,6 @@ class CameraXActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(animation: Animation?) {
-                frameLayoutShutter.visibility = View.GONE
-                showCaptureImage()
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
@@ -311,6 +313,7 @@ class CameraXActivity : AppCompatActivity() {
 
     private fun showCaptureImage(): Boolean {
         if (frameLayoutPreview.visibility == View.GONE) {
+            frameLayoutShutter.visibility = View.GONE
             frameLayoutPreview.visibility = View.VISIBLE
             imageViewPreview.setImageURI(savedUri)
             return false
@@ -323,7 +326,6 @@ class CameraXActivity : AppCompatActivity() {
     private fun hideCaptureImage() {
         imageViewPreview.setImageURI(null)
         frameLayoutPreview.visibility = View.GONE
-
     }
 
     // SideEffects
