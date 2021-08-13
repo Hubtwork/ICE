@@ -237,7 +237,7 @@ class CameraXActivity : AppCompatActivity() {
                             call: Call<ImageResponseData>,
                             response: Response<ImageResponseData>
                         ) {
-                            DebugLogger.log("통신성공", "$file / $response")
+                            DebugLogger.log("통신성공", "$file / ${response.headers()}")
                             if (response.isSuccessful) {
                                 DebugLogger.log("이미지 서버연결 성공", "이미지 인코딩 길이 : ${response.body()!!.image.length}")
                                 if(response.body()!!.image.isNotEmpty())
