@@ -10,7 +10,7 @@ object BufferedImageReader {
 
     fun decodeImageToBase64(base64String: String): Bitmap? {
         return try {
-            val encodeByte: ByteArray = Base64.decode(base64String, Base64.DEFAULT)
+            val encodeByte: ByteArray = Base64.decode(base64String, Base64.URL_SAFE)
             BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
         } catch (e: Exception) {
             DebugLogger.log("ERROR", e.localizedMessage)
